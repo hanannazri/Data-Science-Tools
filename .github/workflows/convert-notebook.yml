@@ -1,0 +1,31 @@
+name: Convert Notebook to HTML
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          pip install jupyterthemes
+          jt -t onedork
+
+      - name: Convert notebook to HTML
+        run: |
+          jupyter nbconvert --to html --template full my_notebook.ipynb
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add my_notebook.html
+          git commit -m "Convert notebook to HTML with dark theme"
+          git push

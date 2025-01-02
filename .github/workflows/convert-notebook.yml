@@ -24,10 +24,14 @@ jobs:
             jupyter nbconvert --to html --template full "$notebook"
           done
 
-      - name: Commit and push changes
+      - name: Add converted HTML files if they exist
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add *.html
-          git commit -m "Convert notebooks to HTML with dark theme"
-          git push
+          if ls *.html 1> /dev/null 2>&1; then
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add *.html
+            git commit -m "Convert notebooks to HTML with dark theme"
+            git push
+          else
+            echo "No HTML files to add."
+          fi
